@@ -122,8 +122,11 @@ class Client<
         requestArgs: requestArgs<GetParams, PostParams>
     ): Promise<ResponseType | string> {
         const { endpoint, getParams, postParams, dryRun } = requestArgs
-        // const urlObj = new URL(`${this.baseURL}${endpoint}`)
-        const urlObj = `${this.baseURL}${endpoint}`;
+        const urlObj = new URL(`${this.baseURL}${endpoint}`) as any
+        urlObj._url = urlObj.toString().endsWith("/")
+            ? urlObj.toString().slice(0, -1)
+            : urlObj.toString()
+
         if (postParams !== undefined) {
             if (getParams !== undefined) {
                 for (const [k, v] of Object.entries(getParams)) {
